@@ -20,9 +20,11 @@
             chart: {
 
                 title: "Zone de test de EXTCHARTJS",
+                title_color : "darkgray",
                 type: "linear",
                 width: window.innerWidth / 1.02,
                 height: window.innerHeight / 1.02,
+                theme : "dark",
                 y: {
                     unit: "€"
                 },
@@ -31,23 +33,24 @@
                 },
                 colors : [
                     "lime",
-                    "green",
+                    "red",
                     "blue",
                     "red",
                     "yellow",
                     "red",
                     "blue"
-                ]
+                ],
+                yround : 50
             },
 
             datasets: [
                 {
-                    y: [-100, 99, 333, 200, 995, 886, 788, 844, 955, 1660, 1551, 1255],
+                    y: [-101, 99, 333, 200, 995, 886, 788, 844, 955, 1660, 1551, 1255],
                     x: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                     display_title: "Dépenses"
                 },
                 {
-                    y: [-55, 25, 500, 400, 555, 22, 10, -844, -55, 189, 225, 500],
+                    y: [-55, 25, 500, 400, 555, 50, 50, -200, -55, 189, 225, 500],
                     x: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                     display_title: "Dépenses"
                 }

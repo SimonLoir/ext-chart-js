@@ -25,6 +25,14 @@ var newExtJsChart = function (div, options){
     // Cleaning the div
 
     div.innerHTML = "";
+
+    // Applying style on the div
+
+    if(options.chart.theme != undefined){
+        if(options.chart.theme == "dark"){
+            div.style.background = "rgba(0,0,0,0.75)";
+        }
+    }
     
     // Creating the drawing area
 
@@ -49,7 +57,7 @@ var newExtJsChart = function (div, options){
 
     ctx.beginPath();
 
-    ctx.fillStyle = "darkgray";
+    ctx.fillStyle = options.chart.title_color;
     ctx.font = "20px Arial";
     ctx.textAlign = "center";
 
@@ -135,7 +143,7 @@ var newExtJsChart = function (div, options){
             for (var dsix = 0; dsix < dataset.x.length; dsix++) {
 
                 var x =  50 + (dataset.x[dsix] * cell_size_x) - (min_x * cell_size_x);
-                var y = canvas.height - 50 - (dataset.y[dsix] * cell_size_y) + (min_y * cell_size_y);
+                var y = getY(dataset.y[dsix], canvas, cell_size_y, min_y);
 
                 draw.dot(x, y, 2, color);
 
@@ -154,12 +162,15 @@ var newExtJsChart = function (div, options){
                     ctx.closePath();
                     
                     last_x = x;
-                    last_y = y;
-
-                    draw.text(dataset.y[dsix], 25, y, "10px Arial", color);
-                    
+                    last_y = y;                  
 
                 }
+
+                
+
+                    var toBeShown = Math.round(dataset.y[dsix] / options.chart.yround) * options.chart.yround;
+
+                    draw.text(toBeShown, 25,getY(toBeShown, canvas, cell_size_y, min_y), "10px Arial", color);
 
             }
 
@@ -239,4 +250,9 @@ var extChartDrawer = function (ctx){
 
     return this;
 
+}
+
+
+function getY(y, canvas, cell_size_y, min_y){
+    return canvas.height - 50 - (y * cell_size_y) + (min_y * cell_size_y);
 }
