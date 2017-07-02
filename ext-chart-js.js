@@ -47,11 +47,22 @@ var newExtJsChart = function (div, options){
     
     // Setting up the canvas
 
-    canvas.width = options.chart.width;
+    if(options.chart.width != "fit"){
+        canvas.width = options.chart.width;
+    }else{
+        canvas.width = div.offsetWidth;
+    }
     
-    canvas.height = options.chart.height;
+    if(options.chart.height != "fit"){
+        canvas.height = options.chart.height;
+    }else{
+        canvas.height = div.offsetHeight;
+    }
     
-    //canvas.style.background = "#eee";
+    div.style.padding = "0";
+    div.style.margin = "0";
+    
+
 
     // Creating title
 
@@ -129,7 +140,7 @@ var newExtJsChart = function (div, options){
 
         if(min_y <= 0) {
             ctx.beginPath();
-            ctx.strokeStyle = "rgba(0,0,0,0.15)";
+            ctx.strokeStyle = "rgba(255,255,255,0.05)";
             var line_y = canvas.height - from_bottom - (0 * cell_size_y) + (min_y * cell_size_y)
             ctx.moveTo(from_left, line_y);
             ctx.lineTo(canvas.width - from_left, line_y);
@@ -141,7 +152,12 @@ var newExtJsChart = function (div, options){
 
         // writing graph
 
-        var monthes = ["", "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Jullet", "Aout", "Septembre", "Octobre", "Novembre", "Décembre"];
+
+        if(from_bottom >= 100){
+            var monthes = ["", "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "JuIllet", "Aout", "Septembre", "Octobre", "Novembre", "Décembre"];
+        }else{
+            var monthes = ["", "J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"];             
+        }
 
         for (var dsi = 0; dsi < options.datasets.length; dsi++) {
 
