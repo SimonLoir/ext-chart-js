@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="ext-chart-js.js"></script>
+</head>
+<body>
+    <div id="test" class="div"></div>
+    <script>
+        var chart = jsChart("#test", {
+            chart : {
+
+                title : "Mon tableau",
+                height:window.innerHeight,
+                width :window.innerWidth,
+                type : "linear",
+                colors : [
+                    "#D46A6A",
+                    "#801515", 
+                    "#FFAAAA"
+                ]
+
+            },
+            datasets : [
+
+                {
+                    y: [0, 25, 35, 54, 75, 106, 17, 18, 59, 10, 161, 162],
+                    x: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                    display_title: "Dépenses"
+                },
+                {
+                    y: [200, -205, -305, -450, -550, -200, -700, 400,- 900, -500, -1100, -1200],
+                    x: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                    display_title: "Revenus"
+                },  {
+                    y: [250, -25, -35, -40, -50, -20, -70, 40,- 1000, -500, -505, -100],
+                    x: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                    display_title: "Revenus"
+                }
+                ,  {
+                    y: [44 , 25, 35, 54, 75, 106, 17, 18, 59, 10, 161, 162],
+                    x: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                    display_title: "Dépenses"
+                },
+                {
+                    y: [456, -205, -305, -450, -550, -200, -700, 400,- 900, -500, -1100, -1200],
+                    x: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                    display_title: "Revenus"
+                },  {
+                    y: [250, -25, -35, -40, -50, -20, -70, 40,- 1000, -500, -505, -100],
+                    x: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                    display_title: "Revenus"
+                }
+            ]
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="ext-chart-js.js"></script>
+</head>
+
+<body>
+    <div id="chart">
+
+    </div>
+
+    <script>
+        var chart = jsChart("#chart", {
+
+            chart: {
+
+                title: "Zone de test de EXTCHARTJS",
+                type: "linear",
+                width: window.innerWidth / 1.02,
+                height: window.innerHeight / 1.02,
+                y: {
+                    unit: "€"
+                },
+                x: {
+                    unit: "~month"
+                },
+                colors : [
+                    "lime",
+                    "green",
+                    "blue",
+                    "red",
+                    "yellow",
+                    "red",
+                    "blue"
+                ]
+            },
+
+            datasets: [
+                {
+                    y: [-100, 99, 333, 200, 995, 886, 788, 844, 955, 1660, 1551, 1255],
+                    x: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                    display_title: "Dépenses"
+                },
+                {
+                    y: [-55, 25, 1000, 400, 555, 22, 10, -844, -55, 189, 225, 500],
+                    x: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                    display_title: "Dépenses"
+                }
+            ]
+
+        });
+    </script>
+</body>
+
+</html>
