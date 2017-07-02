@@ -8,20 +8,53 @@
     <script src="ext-chart-js.js"></script>
 </head>
 <body>
+    <style>
+        #test {
+
+            position: fixed;
+            top: 0;left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: sans-serif;
+
+        }
+    </style>
     <div id="test" class="div"></div>
     <script>
         var chart = jsChart("#test", {
             chart : {
 
-                title : "Mon tableau",
-                height:window.innerHeight,
-                width :window.innerWidth,
-                type : "linear",
+                title: "Zone de test de EXTCHARTJS",
+                title_color : "darkgray",
+                type: "linear",
+                width: "fit",
+                height: "fit",
+                theme : "dark",
+                y: {
+                    unit: "€"
+                },
+                x: {
+                    unit: "~month"
+                },
                 colors : [
-                    "#D46A6A",
-                    "#801515", 
-                    "#FFAAAA"
-                ]
+                    "lime",
+                    "red",
+                    "blue",
+                    "red",
+                    "yellow",
+                    "red",
+                    "blue"
+                ],
+                yround : 50,
+                margin : {
+
+                    y : 100,
+                    x : 100
+
+                },
+                axes_font : "11px Arial",
+                hide : [1]
 
             },
             datasets : [
