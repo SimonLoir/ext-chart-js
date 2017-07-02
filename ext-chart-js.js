@@ -69,19 +69,27 @@ var newExtJsChart = function (div, options){
 
     if(options.chart.type == "linear"){
 
+        if(options.chart.margin == undefined) {
+            var from_bottom = 150;
+            var from_left = 100;
+        }else{
+            var from_bottom = options.chart.margin.y;
+            var from_left = options.chart.margin.x;
+        }
+
         // Y axis 
         ctx.beginPath();
         ctx.strokeStyle = "rgba(0,0,0,0.15)";
-        ctx.moveTo(50, canvas.height - 50);
-        ctx.lineTo(50, 65);
+        ctx.moveTo(from_left, canvas.height - from_bottom);
+        ctx.lineTo(from_left, 65);
         ctx.stroke();
         ctx.closePath();
 
         // X axis
         ctx.beginPath();
         ctx.strokeStyle = "rgba(0,0,0,0.15)";
-        ctx.moveTo(50, canvas.height - 50);
-        ctx.lineTo(canvas.width - 50,  canvas.height - 50);
+        ctx.moveTo(from_left, canvas.height - from_bottom);
+        ctx.lineTo(canvas.width - from_left,  canvas.height - from_bottom);
         ctx.stroke();
         ctx.closePath();
 
@@ -109,12 +117,12 @@ var newExtJsChart = function (div, options){
         
         // Defining x size : 
 
-        var available_width = canvas.width - 100;
+        var available_width = canvas.width - (2 * from_left);
         var cell_size_x = available_width / Math.abs(max_x - min_x);
 
         // Defining y size
 
-        var available_height = canvas.height - 65 - 50;
+        var available_height = canvas.height - 65 - from_bottom;
         var cell_size_y = available_height / Math.abs(max_y - min_y);
 
         // Drawing 0 line
@@ -122,16 +130,18 @@ var newExtJsChart = function (div, options){
         if(min_y <= 0) {
             ctx.beginPath();
             ctx.strokeStyle = "rgba(0,0,0,0.15)";
-            var line_y = canvas.height - 50 - (0 * cell_size_y) + (min_y * cell_size_y)
-            ctx.moveTo(50, line_y);
-            ctx.lineTo(canvas.width - 50, line_y);
+            var line_y = canvas.height - from_bottom - (0 * cell_size_y) + (min_y * cell_size_y)
+            ctx.moveTo(from_left, line_y);
+            ctx.lineTo(canvas.width - from_left, line_y);
             ctx.stroke();
             ctx.closePath();
 
-            draw.text('0', 25, line_y, "10px Arial");
+            draw.text('0', from_left / 2, line_y, options.chart.axes_font);
         }
 
         // writing graph
+
+        var monthes = ["", "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Jullet", "Aout", "Septembre", "Octobre", "Novembre", "Décembre"];
 
         for (var dsi = 0; dsi < options.datasets.length; dsi++) {
 
@@ -142,8 +152,8 @@ var newExtJsChart = function (div, options){
             
             for (var dsix = 0; dsix < dataset.x.length; dsix++) {
 
-                var x =  50 + (dataset.x[dsix] * cell_size_x) - (min_x * cell_size_x);
-                var y = getY(dataset.y[dsix], canvas, cell_size_y, min_y);
+                var x =  from_left + (dataset.x[dsix] * cell_size_x) - (min_x * cell_size_x);
+                var y = getY(dataset.y[dsix], canvas, cell_size_y, min_y, from_bottom);
 
                 draw.dot(x, y, 2, color);
 
@@ -166,11 +176,30 @@ var newExtJsChart = function (div, options){
 
                 }
 
-                
+                var toBeShown = Math.round(dataset.y[dsix] / options.chart.yround) * options.chart.yround;
 
-                    var toBeShown = Math.round(dataset.y[dsix] / options.chart.yround) * options.chart.yround;
+                draw.text(toBeShown, from_left / 2,getY(toBeShown, canvas, cell_size_y, min_y, from_bottom), options.chart.axes_font, options.chart.title_color);
 
-                    draw.text(toBeShown, 25,getY(toBeShown, canvas, cell_size_y, min_y), "10px Arial", color);
+                draw.text(function () {
+                    
+                    var data = dataset.x[dsix];
+
+                    if(options.chart.x.unit == "~month"){
+
+                        real_data = "";
+                        var i = 0;
+                        var ee = 0;
+                        while (i < data) {
+                            i = i + 12; 
+                            ee++;
+                        }
+                        real_data = ee - 1;
+
+                        return monthes[data - (real_data * 12)];
+
+                    }
+
+                }(), canvas.height - (from_bottom / 2), -x, options.chart.axes_font, options.chart.title_color, Math.PI / 2);
 
             }
 
@@ -217,11 +246,7 @@ var newExtJsChart = function (div, options){
 
 var extChartDrawer = function (ctx){
 
-    this.ctx = ctx;
-
     this.dot = function (x,y,dotRadius,dotColor){
-
-        var ctx = this.ctx;
 
         ctx.beginPath();
         ctx.arc(x,y, dotRadius, 0, 2 * Math.PI, false);
@@ -230,8 +255,18 @@ var extChartDrawer = function (ctx){
         ctx.closePath();            
     } 
 
-    this.text = function (text, x, y, font, color) {
+    this.text = function (text, x, y, font, color, rotate) {
         
+        if(rotate != undefined) {
+
+            ctx.save();
+
+            ctx.translate(0,0);
+
+            ctx.rotate(rotate);
+
+        }
+
         ctx.beginPath();
 
         if(color){
@@ -239,12 +274,20 @@ var extChartDrawer = function (ctx){
         }else{
             ctx.fillStyle = "darkgray";
         }
+
+
         ctx.font = font;
         ctx.textAlign = "center";
 
         ctx.fillText(text, x, y);
 
         ctx.closePath();
+
+        if(rotate != undefined) {
+
+            ctx.restore();
+
+        }
 
     }
 
@@ -253,6 +296,6 @@ var extChartDrawer = function (ctx){
 }
 
 
-function getY(y, canvas, cell_size_y, min_y){
-    return canvas.height - 50 - (y * cell_size_y) + (min_y * cell_size_y);
+function getY(y, canvas, cell_size_y, min_y, from_bottom){
+    return canvas.height - from_bottom - (y * cell_size_y) + (min_y * cell_size_y);
 }
