@@ -14,8 +14,8 @@
 
     </div>
     <style>
+       
         #chart {
-
             position: fixed;
             top: 0;left: 0;
             width: 100%;
@@ -30,8 +30,7 @@
 
             chart: {
 
-                title: "Zone de test de EXTCHARTJS",
-                title_color : "darkgray",
+                title: "Zone de test de EXTCHARTJS",title_color : "darkgray",
                 type: "linear",
                 width: "fit",
                 height: "fit",
@@ -51,11 +50,11 @@
                     "red",
                     "blue"
                 ],
-                yround : 1,
+                yround : 5,
                 margin : {
 
-                    y : 100,
-                    x : 100
+                    y : 50,
+                    x : 50
 
                 },
                 axes_font : "11px Arial",
@@ -64,18 +63,24 @@
 
             datasets: [
                 {
-                    y: [26,25,26,22,30,-10,12,15,10, 11, 12, 16],
+                    y: [26,25,26,22,30,50,12,15,10, 11, 12, 16],
                     x: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                     display_title: "Dépenses"
                 },
                 {
-                    y: [2,2, 18,10,5,-10,12,15,10, 11, 12, 16],
+                    y: [2,2, 18,10,5,-20,12,22,30, 12, 19, 33],
                     x: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                     display_title: "Dépenses"
                 }
             ]
 
         });
+
+        setTimeout(function () {
+
+            chart.showDataSet(1);
+
+        }, 5000);
     </script>
 </body>
 

@@ -31,8 +31,23 @@ var newExtJsChart = function (div, options) {
     if (options.chart.theme != undefined) {
         if (options.chart.theme == "dark") {
             div.style.background = "rgba(0,0,0,0.75)";
+        }else if (options.chart.theme == "light") {
+            div.style.background = "rgba(0,0,0,0.12)";
         }
     }
+
+    if (options.chart.colors == undefined) {
+
+        options.chart.colors = [
+            "rgba(224,36,36, 0.60)",
+            "rgba(224,36,36, 0.75)",
+            "rgba(224,36,36, 0.90)",
+            "rgba(247,187,22, 0.80)",
+            "rgba(247,187,22, 0.85)",
+            "rgba(247,187,22, 1)"
+        ]
+    }
+
 
     // Creating the drawing area
 
@@ -76,6 +91,17 @@ var newExtJsChart = function (div, options) {
 
     ctx.closePath();
 
+    // 
+
+    var x_user_interface = document.createElement('div');
+    x_user_interface.style.position = "absolute";
+    x_user_interface.style.top = 0;
+    x_user_interface.style.right = 0;
+    x_user_interface.style.padding = "15px";
+    x_user_interface.innerHTML = "Légende : <br />"
+
+    div.appendChild(x_user_interface);
+
     // Making the chart
 
     if (options.chart.type == "linear") {
@@ -117,7 +143,27 @@ var newExtJsChart = function (div, options) {
             if (element < min_x) { min_x = element; }
         }
 
-        var all_y = function () { var array = []; var a = options.datasets; for (var i = 0; i < a.length; i++) { var element = a[i].y; for (var ix = 0; ix < element.length; ix++) { var e = element[ix]; array.push(e); } } return array; }();
+        var all_y = function () {
+            var array = [];
+            var a = options.datasets;
+            for (var i = 0; i < a.length; i++) {
+
+                if (options.chart.hide != undefined && options.chart.hide.indexOf(i) >= 0) {
+
+                } else {
+                    var element = a[i].y;
+                    for (var ix = 0; ix < element.length; ix++) {
+                        var e = element[ix];
+                        array.push(e);
+                    }
+
+                }
+
+            }
+            return array;
+
+        }();
+
         var min_y = all_y[0];
         var max_y = all_y[0];
 
@@ -152,16 +198,7 @@ var newExtJsChart = function (div, options) {
             draw.text('0', from_left / 2, line_y, options.chart.axes_font);
         }
 
-        // Making user interface
 
-        var x_user_interface = document.createElement('div');
-        x_user_interface.style.position = "absolute";
-        x_user_interface.style.top = 0;
-        x_user_interface.style.right = 0;
-        x_user_interface.style.padding = "15px";
-        x_user_interface.innerHTML = "Légende : <br />"
-
-        div.appendChild(x_user_interface);
 
         // writing graph
 
@@ -184,10 +221,10 @@ var newExtJsChart = function (div, options) {
                 var shown = false;
 
             } else {
-                
+
                 var line_color = color;
                 var shown = true;
-                
+
 
                 for (var dsix = 0; dsix < dataset.x.length; dsix++) {
 
@@ -207,6 +244,7 @@ var newExtJsChart = function (div, options) {
                         ctx.strokeStyle = color;
                         ctx.moveTo(last_x, last_y);
                         ctx.lineTo(x, y);
+                        //ctx.bezierCurveTo(last_x + 2,last_y - 5,x - 2,y - 5,x, y);
                         ctx.stroke();
                         ctx.closePath();
 
@@ -291,13 +329,13 @@ var newExtJsChart = function (div, options) {
             line.setAttribute('data-shown', shown);
             line.onclick = function () {
 
-                if(this.getAttribute("data-shown") == "true"){
-                    xxx_chart_ref.hideDataSet(this.getAttribute('data-id')); 
-                    console.log('to hide')              
-                }else{
+                if (this.getAttribute("data-shown") == "true") {
+                    xxx_chart_ref.hideDataSet(this.getAttribute('data-id'));
+                    console.log('to hide')
+                } else {
                     xxx_chart_ref.showDataSet(this.getAttribute('data-id'));
-                    console.log('to show')              
-                    
+                    console.log('to show')
+
                 }
 
             }
@@ -305,6 +343,10 @@ var newExtJsChart = function (div, options) {
 
 
 
+
+    } else if (options.chart.type == "circular") {
+
+        extChartDrawCircularChart(ctx, options, div, canvas, this, draw, x_user_interface);
 
     }
 
@@ -336,7 +378,7 @@ var newExtJsChart = function (div, options) {
 
     }
 
-    this.showDataSet = function (id){
+    this.showDataSet = function (id) {
 
         id = parseInt(id);
 
@@ -344,7 +386,7 @@ var newExtJsChart = function (div, options) {
 
         for (var i = 0; i < this.options.chart.hide.length; i++) {
             var element = this.options.chart.hide[i];
-            if(element != id){
+            if (element != id) {
                 after.push(element);
             }
         }
@@ -355,7 +397,7 @@ var newExtJsChart = function (div, options) {
 
     }
 
-    this.hideDataSet = function (id){
+    this.hideDataSet = function (id) {
 
         id = parseInt(id);
 
@@ -424,5 +466,114 @@ var extChartDrawer = function (ctx) {
 
 
 function getY(y, canvas, cell_size_y, min_y, from_bottom) {
+
     return canvas.height - from_bottom - (y * cell_size_y) + (min_y * cell_size_y);
+
+}
+
+function extChartDrawCircularChart(ctx, options, div, canvas, that, drawer, x_user_interface) {
+
+    var color = options.chart.title_color;
+    var circle = {
+        x: canvas.width / 2,
+        y: canvas.height / 2 + 10,
+        radius: (canvas.height / 2) - 70
+    }
+
+    var total = 0;
+
+    for (var i = 0; i < options.datasets.length; i++) {
+        if (options.chart.hide != undefined && options.chart.hide.indexOf(i) >= 0) {
+
+        } else {
+
+            var dataset = options.datasets[i];
+            total += dataset.value;
+
+        }
+    }
+
+
+    ctx.beginPath();
+
+    ctx.arc(circle.x, circle.y, circle.radius, 0, 2 * Math.PI, false);
+    ctx.lineWidth = "1x";
+    ctx.strokeStyle = color;
+    ctx.stroke();
+
+    ctx.closePath();
+
+    drawer.dot(circle.x, circle.y, 1, color);
+
+    ctx.beginPath();
+    ctx.moveTo(circle.x, circle.y);
+    ctx.lineTo(circle.x, circle.y - circle.radius);
+    ctx.stroke();
+
+
+    var arc = Math.radians(-90);
+
+    for (var i = 0; i < options.datasets.length; i++) {
+
+        if (options.chart.hide != undefined && options.chart.hide.indexOf(i) >= 0) {
+            var shown = false;
+            var line_color = "gray";
+        } else {
+
+            var shown = true;
+
+            var line_color = options.chart.colors[i];
+
+
+            var dataset = options.datasets[i];
+
+            ctx.beginPath();
+
+            ctx.moveTo(circle.x, circle.y);
+
+            var arcSector = Math.radians(100 * (dataset.value / total) * 3.6);
+
+            ctx.arc(circle.x, circle.y, circle.radius, arc, arc + arcSector, false);
+
+            arc = arc + arcSector;
+
+            ctx.lineTo(circle.x, circle.y);
+
+            ctx.fillStyle = options.chart.colors[i];
+
+            ctx.fill();
+
+            ctx.closePath();
+
+        }
+
+        try {
+            var line = x_user_interface.appendChild(document.createElement('div'));
+            line.style.color = line_color;
+            line.innerHTML = dataset.label;
+            line.setAttribute('data-id', i);
+            line.setAttribute('data-shown', shown);
+            line.onclick = function () {
+
+                if (this.getAttribute("data-shown") == "true") {
+                    that.hideDataSet(this.getAttribute('data-id'));
+                } else {
+                    that.showDataSet(this.getAttribute('data-id'));
+                }
+
+            }
+        } catch (error) {
+            that.showDataSet(0);
+        }
+
+    }
+
+
+
+}
+
+Math.radians = function (degrees) {
+
+    return degrees * Math.PI / 180;
+
 }
