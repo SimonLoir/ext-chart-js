@@ -272,6 +272,8 @@ var newExtJsChart = function (div, options) {
 
                             return monthes[data - (real_data * 12)];
 
+                        }else{
+                            return dataset.x[dsix]
                         }
 
                     };
