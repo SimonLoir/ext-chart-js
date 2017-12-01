@@ -33,6 +33,8 @@ var newExtJsChart = function (div, options) {
             div.style.background = "rgba(0,0,0,0.75)";
         }else if (options.chart.theme == "light") {
             div.style.background = "rgba(0,0,0,0.12)";
+        }else if(options.chart.theme == "light-sstats"){
+            div.style.background = "rgb(231,231,231)";
         }
     }
 
