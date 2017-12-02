@@ -34,7 +34,7 @@ var newExtJsChart = function (div, options) {
         }else if (options.chart.theme == "light") {
             div.style.background = "rgba(0,0,0,0.12)";
         }else if(options.chart.theme == "light-sstats"){
-            div.style.background = "rgb(231,231,231)";
+            div.style.background = "rgba(0,0,0,0)";//"rgb(231,231,231)";
         }
     }
 
@@ -372,6 +372,13 @@ var newExtJsChart = function (div, options) {
 
     }
 
+    this.fit = function () {
+        var e = this;
+        window.addEventListener('resize', function() {
+            newExtJsChart(e.div, e.options);
+        });
+    }
+
     // Adds a new data set in options.datasets
 
     this.newDataSet = function (dataset) {
@@ -501,7 +508,7 @@ function extChartDrawCircularChart(ctx, options, div, canvas, that, drawer, x_us
     ctx.beginPath();
 
     ctx.arc(circle.x, circle.y, circle.radius, 0, 2 * Math.PI, false);
-    ctx.lineWidth = "1x";
+    ctx.lineWidth = "1px";
     ctx.strokeStyle = color;
     ctx.stroke();
 
