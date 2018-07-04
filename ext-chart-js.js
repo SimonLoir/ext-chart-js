@@ -31,9 +31,9 @@ var newExtJsChart = function (div, options) {
     if (options.chart.theme != undefined) {
         if (options.chart.theme == "dark") {
             div.style.background = "rgba(0,0,0,0.75)";
-        }else if (options.chart.theme == "light") {
+        } else if (options.chart.theme == "light") {
             div.style.background = "rgba(0,0,0,0.12)";
-        }else if(options.chart.theme == "light-sstats"){
+        } else if (options.chart.theme == "light-sstats") {
             div.style.background = "rgba(0,0,0,0)";//"rgb(231,231,231)";
         }
     }
@@ -42,11 +42,18 @@ var newExtJsChart = function (div, options) {
 
         options.chart.colors = [
             "rgba(224,36,36, 0.60)",
-            "rgba(224,36,36, 0.75)",
+            "rgba(224,36,36, 0.70)",
+            "rgba(224,36,36, 0.80)",
             "rgba(224,36,36, 0.90)",
+            "rgba(247,187,22, 0.70)",
             "rgba(247,187,22, 0.80)",
-            "rgba(247,187,22, 0.85)",
-            "rgba(247,187,22, 1)"
+            "rgba(247,187,22, 0.90)",
+            "rgba(247,187,22, 1)",
+            "rgba(100,36,36, 0.50)",
+            "rgba(100,36,36, 0.60)",
+            "rgba(100,36,36, 0.70)",
+            "rgba(100,36,36, 0.80)",
+            "rgba(100,36,36, 0.90)",
         ]
     }
 
@@ -169,6 +176,7 @@ var newExtJsChart = function (div, options) {
         var min_y = all_y[0];
         var max_y = all_y[0];
 
+        console.log(min_y, max_y)
 
         for (var i = 0; i < all_y.length; i++) {
             var element = all_y[i];
@@ -272,7 +280,13 @@ var newExtJsChart = function (div, options) {
 
                             return monthes[data - (real_data * 12)];
 
-                        }else{
+                        } else if (options.chart.x.unit == "~date") {
+
+                            var d = new Date(parseFloat(dataset.x[dsix]) * 1000);
+
+                            return d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear() + " " + d.getHours() + ":00";
+
+                        } else {
                             return dataset.x[dsix]
                         }
 
@@ -374,7 +388,7 @@ var newExtJsChart = function (div, options) {
 
     this.fit = function () {
         var e = this;
-        window.addEventListener('resize', function() {
+        window.addEventListener('resize', function () {
             newExtJsChart(e.div, e.options);
         });
     }
@@ -528,7 +542,7 @@ function extChartDrawCircularChart(ctx, options, div, canvas, that, drawer, x_us
 
         if (options.chart.hide != undefined && options.chart.hide.indexOf(i) >= 0) {
             var shown = false;
-            var line_color = "gray";
+            var line_color = "white";
         } else {
 
             var shown = true;
